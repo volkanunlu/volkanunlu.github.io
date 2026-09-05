@@ -14,16 +14,23 @@
 
 <style>
   :root{
-    --bg:#fbfbfd;--surface:#ffffff;--ink:#1d1d1f;--ink-2:#6e6e73;--ink-3:#8a8a8f;
+    /* Koyu tema (varsayılan) */
+    --bg:#0a0c0f;--surface:#14171d;--surface-2:#1a1e25;--ink:#f2f3f5;--ink-2:#a3a8b0;--ink-3:#71767e;
+    --line:#242932;--accent:#2ecc8f;--accent-strong:#25b47c;--glow-a:#1fbf7a;--glow-b:#0e7a5a;
+    --code-bg:#0f1216;--orb-op:.30;--grid-op:.55;--shadow:0 20px 45px -25px rgba(0,0,0,.8);
+    --radius:22px;--maxw:1080px;--ease:cubic-bezier(.22,.61,.36,1);
+  }
+  [data-theme="light"]{
+    --bg:#fbfbfd;--surface:#ffffff;--surface-2:#f5f5f7;--ink:#1d1d1f;--ink-2:#6e6e73;--ink-3:#8a8a8f;
     --line:#e7e7ec;--accent:#0a7048;--accent-strong:#0a5e3d;--glow-a:#1fbf7a;--glow-b:#7fe3c0;
-    --code-bg:#161b22;--radius:22px;--maxw:1080px;--ease:cubic-bezier(.22,.61,.36,1);
+    --code-bg:#161b22;--orb-op:.42;--grid-op:.4;--shadow:0 18px 40px -22px rgba(0,0,0,.28);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
   body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   a{color:inherit;text-decoration:none}
-  ::selection{background:rgba(10,112,72,.16)}
+  ::selection{background:color-mix(in srgb, var(--accent) 28%, transparent)}
   img{max-width:100%;display:block}
   .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
   section{padding-block:clamp(66px,10vw,128px)}
@@ -31,25 +38,37 @@
   a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
   .skip{position:absolute;left:-999px;top:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:0 0 10px 0;z-index:100}
   .skip:focus{left:0}
-  .kicker{font-size:.9rem;color:var(--accent);font-weight:500;margin-bottom:14px}
+  .kicker{font-size:.9rem;color:var(--accent);font-weight:500;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .kicker::before{content:"";width:22px;height:1px;background:var(--accent);opacity:.5}
   h2{font-size:clamp(2rem,4.4vw,3.1rem);font-weight:650;letter-spacing:-.03em;line-height:1.06}
 
   /* NAV */
-  .nav{position:sticky;top:0;z-index:50;background:rgba(251,251,253,.72);
-    backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
-  .nav-inner{max-width:var(--maxw);margin-inline:auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
-  .brand{font-weight:600;letter-spacing:-.01em;font-size:1.02rem}
+  .nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb, var(--bg) 78%, transparent);
+    backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:var(--maxw);margin-inline:auto;padding:0 24px;height:56px;display:flex;align-items:center;gap:20px}
+  .brand{font-weight:600;letter-spacing:-.01em;font-size:1.02rem;margin-right:auto}
   .brand span{color:var(--accent)}
-  .nav-links{display:flex;gap:32px;align-items:center}
+  .nav-links{display:flex;gap:30px;align-items:center;order:2}
+  .nav-right{order:3;display:flex;align-items:center;gap:10px}
   .nav-links a{font-size:.92rem;color:var(--ink-2);transition:color .2s var(--ease)}
   .nav-links a:hover{color:var(--ink)}
   .menu-btn{display:none;background:none;border:0;cursor:pointer;padding:8px;color:var(--ink)}
+  .nav-right{display:flex;align-items:center;gap:14px}
+  .theme-btn{background:var(--surface);border:1px solid var(--line);border-radius:980px;cursor:pointer;
+    width:34px;height:34px;display:grid;place-items:center;color:var(--ink-2);
+    transition:color .2s var(--ease),border-color .2s var(--ease),transform .2s var(--ease)}
+  .theme-btn:hover{color:var(--accent);border-color:var(--accent)}
+  .theme-btn:active{transform:scale(.92)}
+  .theme-btn svg{width:16px;height:16px}
+  .theme-btn .moon{display:none}
+  [data-theme="light"] .theme-btn .moon{display:block}
+  [data-theme="light"] .theme-btn .sun{display:none}
 
   /* HERO */
   .hero{position:relative;overflow:hidden;padding-block:clamp(64px,8vw,104px) clamp(56px,7vw,92px)}
   .orb{position:absolute;right:-6%;top:20%;width:min(560px,70vw);aspect-ratio:1;pointer-events:none;z-index:0;
     background:radial-gradient(circle at 35% 35%,var(--glow-a),transparent 55%),radial-gradient(circle at 70% 65%,var(--glow-b),transparent 50%);
-    filter:blur(60px);opacity:.4;animation:drift 16s var(--ease) infinite alternate}
+    filter:blur(70px);opacity:var(--orb-op);animation:drift 16s var(--ease) infinite alternate}
   @keyframes drift{from{transform:translate(-3%,-2%) scale(1)}to{transform:translate(5%,3%) scale(1.08)}}
   .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(28px,5vw,64px);align-items:center}
   .hero h1{font-size:clamp(2.7rem,7.6vw,5.4rem);font-weight:700;line-height:1;letter-spacing:-.045em}
@@ -60,13 +79,13 @@
     transition:transform .18s var(--ease),background .2s var(--ease)}
   .btn-primary{background:var(--accent);color:#fff}
   .btn-primary:hover{background:var(--accent-strong)}
-  .btn-ghost{background:rgba(0,0,0,.045);color:var(--ink)}
-  .btn-ghost:hover{background:rgba(0,0,0,.08)}
+  .btn-ghost{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+  .btn-ghost:hover{background:var(--surface);border-color:var(--accent)}
   .btn:active{transform:scale(.97)}
 
   /* Telefon mockup + Compose kodu */
   .phone{justify-self:center;width:min(215px,60vw);aspect-ratio:9/16.5;border-radius:34px;padding:10px;
-    background:linear-gradient(160deg,#2a2f37,#0f1216);box-shadow:0 30px 60px -20px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.04) inset;position:relative}
+    background:linear-gradient(160deg,#2a2f37,#0f1216);box-shadow:0 30px 60px -20px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06) inset;position:relative}
   .phone::before{content:"";position:absolute;top:14px;left:50%;translate:-50% 0;width:70px;height:19px;background:#0f1216;border-radius:0 0 14px 14px;z-index:3}
   .screen{width:100%;height:100%;border-radius:28px;overflow:hidden;background:var(--code-bg);position:relative;white-space:pre;
     font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;line-height:1.7;color:#c9d1d9;padding:34px 16px 16px}
@@ -86,41 +105,67 @@
   .about-body p{font-size:clamp(1.06rem,1.8vw,1.24rem);color:var(--ink);max-width:56ch}
   .about-body p + p{margin-top:18px}
   .facts{border-top:1px solid var(--line)}
-  .fact{padding:17px 0;border-bottom:1px solid var(--line)}
+  .fact{padding:17px 0;border-bottom:1px solid var(--line);transition:padding-left .25s var(--ease)}
+  .fact:hover{padding-left:8px}
   .fact dt{font-size:.85rem;color:var(--ink-3);margin-bottom:4px}
   .fact dd{font-size:1.05rem;font-weight:500}
   .fact dd a{color:var(--accent)}
 
+  /* İstatistik şeridi */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:clamp(44px,6vw,68px)}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:26px 22px;
+    transition:transform .25s var(--ease),border-color .25s var(--ease)}
+  .stat:hover{transform:translateY(-3px);border-color:color-mix(in srgb, var(--accent) 45%, var(--line))}
+  .stat b{display:block;font-size:clamp(1.9rem,3.4vw,2.5rem);font-weight:650;letter-spacing:-.03em;
+    background:linear-gradient(135deg,var(--accent),var(--glow-a));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.1}
+  .stat span{display:block;margin-top:6px;font-size:.92rem;color:var(--ink-2)}
+
   /* YETENEKLER */
-  .stack-row{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line)}
+  .stack-row{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:24px 0;border-bottom:1px solid var(--line);
+    transition:background .25s var(--ease)}
   .stack-row:first-of-type{border-top:1px solid var(--line)}
-  .stack-cat{font-size:1.05rem;font-weight:600;letter-spacing:-.01em}
+  .stack-row:hover{background:linear-gradient(90deg,color-mix(in srgb, var(--accent) 7%, transparent),transparent 65%)}
+  .stack-cat{font-size:1.05rem;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:11px}
+  .stack-cat .ic{width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:color-mix(in srgb, var(--accent) 14%, transparent);
+    display:grid;place-items:center;color:var(--accent)}
+  .stack-cat .ic svg{width:16px;height:16px}
   .chips{display:flex;flex-wrap:wrap;gap:10px}
   .chip{font-size:.92rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:980px;padding:7px 15px;
-    transition:border-color .2s var(--ease),color .2s}
-  .chip:hover{border-color:var(--accent);color:var(--accent)}
+    transition:border-color .2s var(--ease),color .2s var(--ease),transform .2s var(--ease)}
+  .chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
 
-  /* DENEYİM */
-  .exp{display:grid;grid-template-columns:200px 1fr;gap:clamp(18px,4vw,52px);padding:38px 0;border-top:1px solid var(--line)}
-  .exp:last-of-type{border-bottom:1px solid var(--line)}
+  /* DENEYİM — kartlar */
+  .exp-list{display:flex;flex-direction:column;gap:18px;margin-top:8px}
+  .exp{display:grid;grid-template-columns:210px 1fr;gap:clamp(18px,4vw,44px);position:relative;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(24px,3.4vw,34px);
+    transition:transform .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease)}
+  .exp:hover{transform:translateY(-3px);border-color:color-mix(in srgb, var(--accent) 40%, var(--line));box-shadow:var(--shadow)}
   .exp-meta{font-size:.9rem;color:var(--ink-3);line-height:1.7}
   .exp-meta .yr{color:var(--ink);font-weight:500;display:block;margin-bottom:2px}
-  .exp-body h3{font-size:clamp(1.3rem,2.4vw,1.7rem);font-weight:600;letter-spacing:-.02em}
+  .exp-meta .dot{display:inline-flex;align-items:center;gap:8px;margin-bottom:10px;font-size:.8rem;
+    color:var(--accent);background:color-mix(in srgb, var(--accent) 13%, transparent);border-radius:980px;padding:4px 12px}
+  .exp-meta .dot i{width:6px;height:6px;border-radius:50%;background:var(--accent);display:block}
+  .exp-meta .dot.live i{animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent)}50%{opacity:.7;box-shadow:0 0 0 5px transparent}}
+  .exp-body h3{font-size:clamp(1.25rem,2.2vw,1.6rem);font-weight:600;letter-spacing:-.02em}
   .exp-body .where{color:var(--accent);font-weight:500;margin-top:2px}
   .exp-body ul{margin-top:14px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
-  .exp-body li{position:relative;padding-left:20px;color:var(--ink-2);font-size:1.02rem;max-width:62ch}
-  .exp-body li::before{content:"";position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.55}
+  .exp-body li{position:relative;padding-left:22px;color:var(--ink-2);font-size:1.02rem;max-width:62ch}
+  .exp-body li::before{content:"";position:absolute;left:2px;top:9px;width:9px;height:9px;border-radius:3px;
+    border:1.5px solid var(--accent);opacity:.6}
+  .exp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .exp-tags span{font-size:.82rem;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:4px 11px}
 
   /* PROJELER */
   .work-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:8px}
   .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:30px;
     transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
-  .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -22px rgba(0,0,0,.28)}
-  .card .badge{font-size:.8rem;color:var(--accent);background:rgba(10,112,72,.08);border-radius:7px;padding:4px 11px;display:inline-block}
+  .card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:color-mix(in srgb, var(--accent) 40%, var(--line))}
+  .card .badge{font-size:.8rem;color:var(--accent);background:color-mix(in srgb, var(--accent) 13%, transparent);border-radius:7px;padding:4px 11px;display:inline-block}
   .card h3{font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin-top:16px}
   .card p{color:var(--ink-2);margin-top:10px;font-size:1.02rem}
   .card .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-  .card .tags span{font-size:.82rem;color:var(--ink-2);background:rgba(0,0,0,.04);border-radius:8px;padding:4px 10px}
+  .card .tags span{font-size:.82rem;color:var(--ink-2);background:var(--surface-2);border-radius:8px;padding:4px 10px}
   .card .lk{margin-top:18px;color:var(--accent);font-weight:500;font-size:.95rem;position:relative;display:inline-block}
   .card .lk::after{content:"";position:absolute;left:0;bottom:-3px;width:100%;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
   .card:hover .lk::after{transform:scaleX(1)}
@@ -132,7 +177,7 @@
   .post-main h3{font-size:clamp(1.28rem,2.3vw,1.7rem);font-weight:600;letter-spacing:-.02em;line-height:1.15;transition:color .2s var(--ease)}
   .post:hover .post-main h3{color:var(--accent)}
   .post-main p{color:var(--ink-2);margin-top:8px;max-width:62ch;font-size:1.04rem}
-  .post-tag{display:inline-block;margin-top:12px;font-size:.8rem;color:var(--accent);background:rgba(10,112,72,.08);border-radius:7px;padding:4px 11px}
+  .post-tag{display:inline-block;margin-top:12px;font-size:.8rem;color:var(--accent);background:color-mix(in srgb, var(--accent) 13%, transparent);border-radius:7px;padding:4px 11px}
   .writing-foot{margin-top:34px;color:var(--ink-2);font-size:1rem}
   .writing-foot a{color:var(--accent)}
   .writing-empty{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:44px 0;margin-top:6px}
@@ -154,7 +199,7 @@
   .grid-bg{position:relative}
   .grid-bg::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
     background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-    background-size:44px 44px;opacity:.4;
+    background-size:44px 44px;opacity:var(--grid-op);
     -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000,transparent 75%);
     mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000,transparent 75%)}
   .grid-bg > *:not(.orb){position:relative;z-index:1}
@@ -163,13 +208,18 @@
   .reveal.d1{animation-delay:.05s}.reveal.d2{animation-delay:.16s}.reveal.d3{animation-delay:.27s}.reveal.d4{animation-delay:.38s}
   @keyframes rise{to{opacity:1;transform:none}}
 
+  /* kaydırma ile beliren bölümler */
+  .sr{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .sr.in{opacity:1;transform:none}
+
   @media(max-width:820px){
     .hero .wrap{grid-template-columns:1fr;text-align:left}
     .phone{display:none}
     .work-grid{grid-template-columns:1fr}
+    .stats{grid-template-columns:1fr 1fr}
   }
   @media(max-width:760px){
-    .nav-links{position:fixed;inset:56px 0 auto 0;background:rgba(251,251,253,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    .nav-links{position:fixed;inset:56px 0 auto 0;background:color-mix(in srgb, var(--bg) 96%, transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
       flex-direction:column;gap:0;padding:8px 24px 20px;border-bottom:1px solid var(--line);display:none}
     .nav-links.open{display:flex}
     .nav-links a{padding:14px 0;font-size:1.05rem;border-bottom:1px solid var(--line)}
@@ -178,7 +228,7 @@
     .post{grid-template-columns:1fr;gap:6px}
     .post-date{order:-1}
   }
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}.reveal{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}.reveal{opacity:1;transform:none}.sr{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -188,9 +238,15 @@
 <header class="nav">
   <div class="nav-inner">
     <a class="brand" href="#hero">Volkan<span>.</span>Ünlü</a>
-    <button class="menu-btn" aria-label="Menü" aria-expanded="false" id="menuBtn">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    </button>
+    <div class="nav-right">
+      <button class="theme-btn" id="themeBtn" aria-label="Temayı değiştir" title="Temayı değiştir">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
+      <button class="menu-btn" aria-label="Menü" aria-expanded="false" id="menuBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
     <nav class="nav-links" id="navLinks">
       <a href="#hakkimda">Hakkımda</a>
       <a href="#yetenekler">Yetenekler</a>
@@ -249,7 +305,7 @@
       <div class="about-grid">
         <div class="about-body">
           <p>3+ yıldır Android geliştiriyorum. Şu an Softtech'te (bir Türkiye İş Bankası şirketi), İşCep'in frontend ekibinde çalışıyorum — düzenlemeye tabi bir bankacılık ortamında temiz, bakımı kolay ve güvenli kod yazmaya odaklanıyorum.</p>
-          <p>Sıfırdan yeniden kullanılabilir arayüz bileşenleri kuruyor, mevcut ekranların Java'dan Kotlin'e ve XML'den Jetpack Compose'a geçişini yürütüyorum. Ayrıca Azure DevOps ve GitHub Actions üzerinde CI/CD otomasyonunu üstleniyor, gönüllü Scrum Master olarak takım süreçlerini yürütüyorum.</p>
+          <p>Yeniden kullanılabilir arayüz bileşenleri kuruyor, mevcut ekranların Kotlin ve Jetpack Compose'a geçişini yürütüyorum. Modern Android'i yakından takip ediyorum.</p>
           <p>Google Play'de yayında olan kendi uygulamam <strong>Frost</strong>'u geliştirdim ve öğrendiklerimi <a href="https://medium.com/@volkanunlu2203" target="_blank" rel="noopener">Medium</a>'da yazıyorum.</p>
         </div>
         <dl class="facts">
@@ -260,23 +316,29 @@
           <div class="fact"><dt>Öğreniyor</dt><dd>Kotlin Multiplatform (KMP)</dd></div>
         </dl>
       </div>
+
+      <div class="stats">
+        <div class="stat"><b>3+</b><span>yıl Android deneyimi</span></div>
+        <div class="stat"><b>1</b><span>Play Store uygulaması</span></div>
+        <div class="stat"><b>Milyonlarca</b><span>kullanıcılı ürün: İşCep</span></div>
+        <div class="stat"><b>11+</b><span>profesyonel sertifika</span></div>
+      </div>
     </div>
   </section>
-
   <!-- YETENEKLER -->
   <section id="yetenekler">
     <div class="wrap">
       <p class="kicker">Yetenekler</p>
-      <h2 style="margin-bottom:34px">Teknik yığın</h2>
-      <div class="stack-row"><div class="stack-cat">Mobil</div><div class="chips">
+      <h2 style="margin-bottom:34px">Kullandığım teknolojiler</h2>
+      <div class="stack-row"><div class="stack-cat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M11 18h2"/></svg></span>Mobil</div><div class="chips">
         <span class="chip">Kotlin</span><span class="chip">Java</span><span class="chip">Jetpack Compose</span><span class="chip">XML</span><span class="chip">MVVM</span><span class="chip">Coroutines / Flow</span></div></div>
-      <div class="stack-row"><div class="stack-cat">Veri &amp; Ağ</div><div class="chips">
+      <div class="stack-row"><div class="stack-cat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></span>Veri &amp; Ağ</div><div class="chips">
         <span class="chip">Retrofit</span><span class="chip">Room</span><span class="chip">RxJava</span><span class="chip">Firebase</span></div></div>
-      <div class="stack-row"><div class="stack-cat">CI/CD &amp; DevOps</div><div class="chips">
+      <div class="stack-row"><div class="stack-cat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg></span>CI/CD &amp; DevOps</div><div class="chips">
         <span class="chip">Azure DevOps</span><span class="chip">GitHub Actions</span><span class="chip">YAML</span><span class="chip">Firebase App Distribution</span></div></div>
-      <div class="stack-row"><div class="stack-cat">Web</div><div class="chips">
+      <div class="stack-row"><div class="stack-cat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg></span>Web</div><div class="chips">
         <span class="chip">TypeScript</span><span class="chip">JavaScript</span><span class="chip">Angular</span><span class="chip">HTML5</span><span class="chip">CSS3</span></div></div>
-      <div class="stack-row"><div class="stack-cat">Veritabanı &amp; Araçlar</div><div class="chips">
+      <div class="stack-row"><div class="stack-cat"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 0 0 5 5l-9 9a2.8 2.8 0 0 1-4-4z"/></svg></span>Veritabanı &amp; Araçlar</div><div class="chips">
         <span class="chip">MySQL</span><span class="chip">MS SQL</span><span class="chip">Git</span><span class="chip">JIRA</span><span class="chip">Android Studio</span><span class="chip">Agile / Scrum</span></div></div>
     </div>
   </section>
@@ -285,19 +347,19 @@
   <section id="deneyim">
     <div class="wrap">
       <p class="kicker">Deneyim</p>
-      <h2 style="margin-bottom:8px">İş geçmişi</h2>
+      <h2 style="margin-bottom:26px">İş geçmişi</h2>
+      <div class="exp-list">
       <article class="exp">
-        <div class="exp-meta"><span class="yr">2023 – Bugün</span>İstanbul · Tam zamanlı</div>
+        <div class="exp-meta"><span class="dot live"><i></i>Şu an</span><span class="yr">2023 – Bugün</span>İstanbul · Tam zamanlı</div>
         <div class="exp-body">
           <h3>Android Developer</h3>
           <div class="where">Softtech — bir Türkiye İş Bankası şirketi</div>
           <ul>
-            <li>İşCep frontend'i için sıfırdan, birçok modülde kullanılan yeniden kullanılabilir arayüz bileşenleri ve alt modüller geliştiriyorum.</li>
+            <li>İşCep frontend'i için yeniden kullanılabilir arayüz bileşenleri geliştiriyorum.</li>
             <li>Mevcut ekranların Java→Kotlin ve XML→Jetpack Compose dönüşümünü yürütüyorum.</li>
-            <li>CAPTCHA güvenlik akışını telefon-kimlik yönetimi, anında şifre ve blok kaldırma gibi ek doğrulama akışlarına entegre ettim.</li>
-            <li>Azure DevOps ve GitHub Actions (YAML) üzerinde CI/CD otomasyonunu üstleniyorum: otomatik build, AAR üretimi, PR otomasyonu ve Firebase dağıtımı.</li>
-            <li>Gönüllü Scrum Master olarak Agile törenlerini yürütüyorum.</li>
+            <li>CI/CD otomasyonunu üstleniyorum ve gönüllü Scrum Master olarak takımın süreçlerini yönetiyorum.</li>
           </ul>
+          <div class="exp-tags"><span>Kotlin</span><span>Jetpack Compose</span><span>MVVM</span><span>Coroutines</span><span>Azure DevOps</span><span>GitHub Actions</span></div>
         </div>
       </article>
       <article class="exp">
@@ -306,10 +368,12 @@
           <h3>Yazılım Geliştirici Stajları</h3>
           <div class="where">NRC Bilişim · Kantec · Demircioğlu Robotik</div>
           <ul>
-            <li>.NET ve MS SQL ile kurum içi masaüstü ve otomasyon araçları geliştirdim (personel takip, ticari otomasyon, oto yıkama yönetimi).</li>
+            <li>.NET ve MS SQL ile kurum içi masaüstü ve otomasyon araçları geliştirdim.</li>
           </ul>
+          <div class="exp-tags"><span>.NET</span><span>C#</span><span>MS SQL</span></div>
         </div>
       </article>
+      </div>
     </div>
   </section>
 
@@ -399,10 +463,29 @@
 </footer>
 
 <script>
+  // Tema değiştirme (koyu varsayılan; tercih hatırlanır)
+  const root = document.documentElement, tBtn = document.getElementById('themeBtn');
+  try { const saved = localStorage.getItem('tema'); if (saved) root.setAttribute('data-theme', saved); } catch(e) {}
+  tBtn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('tema', next); } catch(e) {}
+  });
+
   document.getElementById('yil').textContent = new Date().getFullYear();
   const btn = document.getElementById('menuBtn'), links = document.getElementById('navLinks');
   btn.addEventListener('click', () => { const o = links.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
   links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { links.classList.remove('open'); btn.setAttribute('aria-expanded', false); }));
+
+  // Bölümler görünüme girdikçe yumuşak beliriş
+  const targets = document.querySelectorAll('.stat, .stack-row, .exp, .card, .about-body, .facts');
+  if (window.IntersectionObserver && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    targets.forEach((el, i) => { el.classList.add('sr'); el.style.transitionDelay = (i % 4) * 70 + 'ms'; });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+    targets.forEach(el => io.observe(el));
+  }
 </script>
 </body>
 </html>
