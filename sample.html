@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- HER YENİ YAZIDA DEĞİŞTİR: başlık ve açıklama -->
+<title>Jetpack Compose'da recomposition — Volkan Ünlü</title>
+<meta name="description" content="Compose neyi, ne zaman yeniden çiziyor ve gereksiz recomposition nasıl azaltılır?">
+<meta name="author" content="Volkan Ünlü">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230a7048'/%3E%3Ctext x='32' y='44' font-family='sans-serif' font-size='34' font-weight='600' fill='white' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root{
+    --bg:#fbfbfd;--surface:#fff;--ink:#1d1d1f;--ink-2:#6e6e73;--ink-3:#8a8a8f;
+    --line:#e7e7ec;--accent:#0a7048;--accent-strong:#0a5e3d;--maxw:1080px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--accent)}
+  ::selection{background:rgba(10,112,72,.16)}
+
+  .nav{position:sticky;top:0;z-index:50;background:rgba(251,251,253,.72);
+    backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid rgba(0,0,0,.06)}
+  .nav-inner{max-width:var(--maxw);margin-inline:auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-weight:600;letter-spacing:-.01em;font-size:1.02rem;color:var(--ink)}
+  .brand span{color:var(--accent)}
+  .back{font-size:.92rem;color:var(--ink-2)}
+  .back:hover{color:var(--ink)}
+
+  a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+  /* Yazı gövdesi — okunabilir ölçü */
+  .article{max-width:720px;margin-inline:auto;padding:clamp(48px,8vw,90px) 24px}
+  .post-head time{font-size:.92rem;color:var(--ink-3)}
+  .post-head .tag{display:inline-block;margin-left:12px;font-size:.8rem;color:var(--accent);
+    background:rgba(10,112,72,.08);border-radius:7px;padding:3px 10px}
+  .post-head h1{margin-top:18px;font-size:clamp(2rem,5vw,3.1rem);font-weight:700;
+    letter-spacing:-.03em;line-height:1.08}
+
+  .content{margin-top:40px;font-size:1.15rem}
+  .content > * + *{margin-top:24px}
+  .content h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:650;letter-spacing:-.02em;margin-top:48px;line-height:1.15}
+  .content h3{font-size:1.3rem;font-weight:600;margin-top:36px}
+  .content p{color:var(--ink)}
+  .content ul,.content ol{padding-left:1.3em;color:var(--ink)}
+  .content li + li{margin-top:8px}
+  .content blockquote{border-left:3px solid var(--accent);padding:4px 0 4px 20px;color:var(--ink-2);font-style:italic}
+  .content code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;
+    background:rgba(0,0,0,.05);padding:2px 7px;border-radius:6px}
+  .content pre{background:#1d1d1f;color:#f5f5f7;padding:20px 22px;border-radius:14px;overflow-x:auto;font-size:.92rem;line-height:1.55}
+  .content pre code{background:none;padding:0;color:inherit;font-size:1em}
+  .content img{border-radius:14px;margin-block:12px}
+
+  .article-foot{max-width:720px;margin:60px auto 0;padding:32px 24px 0;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;font-size:.95rem;color:var(--ink-2)}
+
+  footer{padding:40px 24px;color:var(--ink-3);font-size:.9rem;text-align:center}
+
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="../index.html">Volkan<span>.</span>Ünlü</a>
+    <a class="back" href="../index.html#yazilar">← Tüm yazılar</a>
+  </div>
+</header>
+
+<article class="article">
+  <!-- ==== BAŞLIK ALANI: her yazıda düzenle ==== -->
+  <header class="post-head">
+    <time datetime="2026-08-12">12 Ağustos 2026</time>
+    <span class="tag">Compose</span>
+    <h1>Jetpack Compose'da recomposition'ı anlamak</h1>
+  </header>
+
+  <!-- ==== YAZI İÇERİĞİ: buraya yaz ==== -->
+  <div class="content">
+    <p>Bu bir örnek yazıdır. Kendi yazını yazarken bu bölümü değiştir. Aşağıda kullanabileceğin bütün öğelerin nasıl göründüğünü görebilirsin — paragraf, başlık, liste, alıntı ve kod.</p>
+
+    <h2>Bir ara başlık</h2>
+    <p>Normal bir paragraf böyle görünür. Metnin satır uzunluğu okumayı kolaylaştıracak şekilde ayarlandı. İçine <a href="#">bağlantı</a> ya da <code>satır içi kod</code> ekleyebilirsin.</p>
+
+    <ul>
+      <li>Madde işaretli liste öğesi</li>
+      <li>İkinci öğe</li>
+      <li>Üçüncü öğe</li>
+    </ul>
+
+    <h3>Kod bloğu</h3>
+    <pre><code>@Composable
+fun Sayac() {
+    var sayi by remember { mutableStateOf(0) }
+    Button(onClick = { sayi++ }) {
+        Text("Tıklanma: $sayi")
+    }
+}</code></pre>
+
+    <blockquote>Önemli bir düşünceyi vurgulamak için alıntı bloğu kullanabilirsin.</blockquote>
+
+    <p>Yazını burada bitir. İyi yazılar genelde tek bir net fikir etrafında döner.</p>
+  </div>
+</article>
+
+<div class="article-foot">
+  <a href="../index.html#yazilar">← Tüm yazılar</a>
+  <a href="mailto:Volkanunlu2203@gmail.com">Görüş bildir</a>
+</div>
+
+<footer>© <span id="yil"></span> Volkan Ünlü</footer>
+<script>document.getElementById('yil').textContent=new Date().getFullYear();</script>
+</body>
+</html>

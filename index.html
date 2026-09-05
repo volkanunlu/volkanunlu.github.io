@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volkan Ünlü — Android Developer</title>
+<meta name="description" content="Kotlin ve Jetpack Compose ile mobil uygulamalar geliştiren Android geliştirici. Çalışmalar, yazılar ve iletişim.">
+<meta name="author" content="Volkan Ünlü">
+<!-- Sosyal medya önizlemesi (paylaşınca görünür) -->
+<meta property="og:title" content="Volkan Ünlü — Android Developer">
+<meta property="og:description" content="Kotlin ve Jetpack Compose ile mobil uygulamalar geliştiriyorum. Çalışmalarım ve Android üzerine yazılarım.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<!-- Monogram favicon (harici dosya gerektirmez) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%230a7048'/%3E%3Ctext x='32' y='44' font-family='-apple-system,Segoe UI,Roboto,sans-serif' font-size='34' font-weight='600' fill='white' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+
+<style>
+  :root{
+    --bg:#fbfbfd;
+    --surface:#ffffff;
+    --ink:#1d1d1f;         /* Apple metni */
+    --ink-2:#6e6e73;        /* ikincil metin */
+    --ink-3:#8a8a8f;
+    --line:#e7e7ec;
+    --accent:#0a7048;       /* derin zümrüt — Android'e ince bir selam */
+    --accent-strong:#0a5e3d;
+    --glow-a:#1fbf7a;
+    --glow-b:#7fe3c0;
+    --radius:22px;
+    --maxw:1080px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:rgba(10,112,72,.16)}
+  img{max-width:100%;display:block}
+
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px}
+  section{padding-block:clamp(72px,11vw,140px)}
+  .rule{border:0;border-top:1px solid var(--line);max-width:var(--maxw);margin-inline:auto}
+
+  /* keyboard erişilebilirliği */
+  a:focus-visible,button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:6px;
+  }
+  .skip{position:absolute;left:-999px;top:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:0 0 10px 0;z-index:100}
+  .skip:focus{left:0}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(251,251,253,.72);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid rgba(0,0,0,.06);
+  }
+  .nav-inner{max-width:var(--maxw);margin-inline:auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-weight:600;letter-spacing:-.01em;font-size:1.02rem}
+  .brand span{color:var(--accent)}
+  .nav-links{display:flex;gap:34px;align-items:center}
+  .nav-links a{font-size:.92rem;color:var(--ink-2);transition:color .2s var(--ease)}
+  .nav-links a:hover{color:var(--ink)}
+  .menu-btn{display:none;background:none;border:0;cursor:pointer;padding:8px;color:var(--ink)}
+  .menu-btn svg{display:block}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;overflow:hidden;text-align:center;padding-block:clamp(96px,16vw,190px) clamp(80px,12vw,150px)}
+  .orb{
+    position:absolute;left:50%;top:38%;translate:-50% -50%;
+    width:min(720px,85vw);aspect-ratio:1;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(circle at 35% 35%, var(--glow-a), transparent 55%),
+      radial-gradient(circle at 70% 65%, var(--glow-b), transparent 50%);
+    filter:blur(60px);opacity:.42;
+    animation:drift 16s var(--ease) infinite alternate;
+  }
+  @keyframes drift{from{transform:translate(-4%,-2%) scale(1)}to{transform:translate(5%,3%) scale(1.08)}}
+  .hero .wrap{position:relative;z-index:1}
+  .hero h1{
+    font-size:clamp(2.9rem,9.2vw,6.6rem);
+    font-weight:700;line-height:.98;letter-spacing:-.045em;
+  }
+  .hero .role{
+    display:inline-block;margin-top:22px;font-size:clamp(1.05rem,2.4vw,1.35rem);
+    font-weight:500;color:var(--accent);letter-spacing:-.01em;
+  }
+  .hero .lead{
+    max-width:34ch;margin:20px auto 0;color:var(--ink-2);
+    font-size:clamp(1.05rem,2.1vw,1.3rem);line-height:1.5;
+  }
+  .cta-row{margin-top:38px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    padding:13px 26px;border-radius:980px;font-size:.98rem;font-weight:500;
+    transition:transform .18s var(--ease),background .2s var(--ease),opacity .2s;
+  }
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-strong)}
+  .btn-ghost{background:rgba(0,0,0,.045);color:var(--ink)}
+  .btn-ghost:hover{background:rgba(0,0,0,.08)}
+  .btn:active{transform:scale(.97)}
+
+  /* hero yükleme animasyonu (tek sefer) */
+  .reveal{opacity:0;transform:translateY(14px);animation:rise .8s var(--ease) forwards}
+  .reveal.d1{animation-delay:.05s}
+  .reveal.d2{animation-delay:.16s}
+  .reveal.d3{animation-delay:.27s}
+  .reveal.d4{animation-delay:.38s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------- BÖLÜM BAŞLIKLARI ---------- */
+  .kicker{font-size:.9rem;color:var(--accent);font-weight:500;margin-bottom:14px}
+  h2{font-size:clamp(2rem,4.4vw,3.1rem);font-weight:650;letter-spacing:-.03em;line-height:1.06}
+
+  /* ---------- HAKKIMDA ---------- */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:clamp(32px,6vw,80px);align-items:start}
+  .about-body p{font-size:clamp(1.08rem,1.9vw,1.28rem);color:var(--ink);max-width:56ch}
+  .about-body p + p{margin-top:20px}
+  .facts{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+  .fact{padding:18px 0;border-bottom:1px solid var(--line)}
+  .fact dt{font-size:.85rem;color:var(--ink-3);margin-bottom:4px}
+  .fact dd{font-size:1.05rem;font-weight:500}
+
+  /* ---------- YETENEKLER ---------- */
+  .stack-row{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:26px 0;border-bottom:1px solid var(--line)}
+  .stack-row:first-of-type{border-top:1px solid var(--line)}
+  .stack-cat{font-size:1.05rem;font-weight:600;letter-spacing:-.01em}
+  .chips{display:flex;flex-wrap:wrap;gap:10px}
+  .chip{
+    font-size:.92rem;color:var(--ink);background:var(--surface);
+    border:1px solid var(--line);border-radius:980px;padding:7px 15px;
+    transition:border-color .2s var(--ease),color .2s;
+  }
+  .chip:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* ---------- ÇALIŞMALAR ---------- */
+  .project{display:grid;grid-template-columns:180px 1fr;gap:clamp(20px,4vw,56px);padding:40px 0;border-top:1px solid var(--line)}
+  .project:last-child{border-bottom:1px solid var(--line)}
+  .p-meta{font-size:.9rem;color:var(--ink-3);line-height:1.7}
+  .p-meta .yr{color:var(--ink);font-weight:500}
+  .p-body h3{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:600;letter-spacing:-.02em}
+  .p-body p{color:var(--ink-2);margin-top:10px;max-width:60ch;font-size:1.06rem}
+  .p-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .p-tags span{font-size:.82rem;color:var(--ink-2);background:rgba(0,0,0,.04);border-radius:8px;padding:4px 10px}
+  .p-links{margin-top:18px;display:flex;gap:20px}
+  .p-links a{font-size:.95rem;color:var(--accent);font-weight:500;position:relative}
+  .p-links a::after{content:"";position:absolute;left:0;bottom:-3px;width:100%;height:1px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
+  .p-links a:hover::after{transform:scaleX(1)}
+
+  /* ---------- YAZILAR ---------- */
+  .post{display:grid;grid-template-columns:170px 1fr;gap:clamp(16px,3vw,44px);padding:34px 0;border-top:1px solid var(--line);align-items:baseline}
+  .post:last-of-type{border-bottom:1px solid var(--line)}
+  .post-date{font-size:.92rem;color:var(--ink-3)}
+  .post-main h3{font-size:clamp(1.3rem,2.4vw,1.75rem);font-weight:600;letter-spacing:-.02em;line-height:1.15;transition:color .2s var(--ease)}
+  .post:hover .post-main h3{color:var(--accent)}
+  .post-main p{color:var(--ink-2);margin-top:8px;max-width:62ch;font-size:1.05rem}
+  .post-tag{display:inline-block;margin-top:12px;font-size:.8rem;color:var(--accent);background:rgba(10,112,72,.08);border-radius:7px;padding:4px 11px}
+  .writing-foot{margin-top:36px;color:var(--ink-2);font-size:1rem}
+
+  /* ---------- İLETİŞİM ---------- */
+  .contact{text-align:center}
+  .contact h2{max-width:16ch;margin-inline:auto}
+  .contact p{color:var(--ink-2);font-size:clamp(1.05rem,2vw,1.25rem);max-width:44ch;margin:18px auto 0}
+  .socials{margin-top:34px;display:flex;gap:26px;justify-content:center;flex-wrap:wrap}
+  .socials a{color:var(--ink-2);font-size:1rem;transition:color .2s var(--ease)}
+  .socials a:hover{color:var(--accent)}
+  .mail-btn{margin-top:30px;display:inline-flex}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:40px 0;color:var(--ink-3);font-size:.9rem}
+  .foot-inner{max-width:var(--maxw);margin-inline:auto;padding:0 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:760px){
+    .nav-links{
+      position:fixed;inset:56px 0 auto 0;background:rgba(251,251,253,.96);
+      backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      flex-direction:column;gap:0;padding:8px 24px 20px;
+      border-bottom:1px solid var(--line);display:none;
+    }
+    .nav-links.open{display:flex}
+    .nav-links a{padding:14px 0;font-size:1.05rem;border-bottom:1px solid var(--line)}
+    .menu-btn{display:block}
+    .about-grid{grid-template-columns:1fr;gap:40px}
+    .stack-row{grid-template-columns:1fr;gap:14px}
+    .project{grid-template-columns:1fr;gap:14px}
+    .post{grid-template-columns:1fr;gap:6px}
+    .post-date{order:-1}
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#hero">İçeriğe geç</a>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#hero">Volkan<span>.</span>Ünlü</a>
+    <button class="menu-btn" aria-label="Menü" aria-expanded="false" id="menuBtn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#hakkimda">Hakkımda</a>
+      <a href="#yetenekler">Yetenekler</a>
+      <a href="#calismalar">Çalışmalar</a>
+      <a href="#yazilar">Yazılar</a>
+      <a href="#iletisim">İletişim</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="orb" aria-hidden="true"></div>
+    <div class="wrap">
+      <h1 class="reveal d1">Volkan Ünlü</h1>
+      <div class="reveal d2"><span class="role">Android Developer</span></div>
+      <p class="lead reveal d3">Kotlin ve Jetpack Compose ile, kullanması keyifli mobil uygulamalar tasarlıyor ve geliştiriyorum.</p>
+      <div class="cta-row reveal d4">
+        <a class="btn btn-primary" href="#calismalar">Çalışmalarım</a>
+        <a class="btn btn-ghost" href="#yazilar">Yazılar</a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- ============ HAKKIMDA ============ -->
+  <section id="hakkimda">
+    <div class="wrap">
+      <p class="kicker">Hakkımda</p>
+      <div class="about-grid">
+        <div class="about-body">
+          <p>Yıllardır Android platformunda uygulama geliştiriyorum. İşimin en sevdiğim yanı, karmaşık bir ihtiyacı alıp; hızlı, akıcı ve sade bir arayüzün arkasına saklamak.</p>
+          <p>Modern Android yığınına — Kotlin, Coroutines ve Jetpack Compose'a — yakından hâkimim. Temiz mimariye, test edilebilir koda ve detaylarda gizlenen kullanıcı deneyimine önem veririm.</p>
+          <p>Öğrendiklerimi burada düzenli olarak yazıyorum; aşağıdaki <a href="#yazilar" style="color:var(--accent)">Yazılar</a> bölümünde bulabilirsin.</p>
+        </div>
+        <dl class="facts">
+          <div class="fact"><dt>Odak</dt><dd>Jetpack Compose</dd></div>
+          <div class="fact"><dt>Diller</dt><dd>Kotlin, Java</dd></div>
+          <div class="fact"><dt>Şirket</dt><dd>Softtech</dd></div>
+          <div class="fact"><dt>Konum</dt><dd>İzmir, Türkiye</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ YETENEKLER ============ -->
+  <section id="yetenekler">
+    <div class="wrap">
+      <p class="kicker">Yetenekler</p>
+      <h2 style="margin-bottom:36px">Çalıştığım araçlar</h2>
+
+      <div class="stack-row">
+        <div class="stack-cat">Dil &amp; Temel</div>
+        <div class="chips">
+          <span class="chip">Kotlin</span>
+          <span class="chip">Coroutines</span>
+          <span class="chip">Flow</span>
+          <span class="chip">Java</span>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-cat">Arayüz</div>
+        <div class="chips">
+          <span class="chip">Jetpack Compose</span>
+          <span class="chip">Material 3</span>
+          <span class="chip">XML / Views</span>
+          <span class="chip">Animasyon</span>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-cat">Mimari</div>
+        <div class="chips">
+          <span class="chip">MVVM</span>
+          <span class="chip">Clean Architecture</span>
+          <span class="chip">Hilt / Dagger</span>
+          <span class="chip">Modülerleştirme</span>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-cat">Veri &amp; Ağ</div>
+        <div class="chips">
+          <span class="chip">Retrofit</span>
+          <span class="chip">Room</span>
+          <span class="chip">Ktor</span>
+          <span class="chip">DataStore</span>
+        </div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-cat">Süreç</div>
+        <div class="chips">
+          <span class="chip">Git</span>
+          <span class="chip">CI/CD</span>
+          <span class="chip">JUnit / Espresso</span>
+          <span class="chip">Play Console</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ÇALIŞMALAR ============ -->
+  <section id="calismalar">
+    <div class="wrap">
+      <p class="kicker">Çalışmalar</p>
+      <h2 style="margin-bottom:12px">Seçilmiş projeler</h2>
+
+      <!-- YENİ PROJE EKLEMEK İÇİN: aşağıdaki .project bloğunu kopyalayıp düzenle -->
+      <article class="project">
+        <div class="p-meta"><span class="yr">2025</span><br>Mobil uygulama</div>
+        <div class="p-body">
+          <h3>Uygulama Adı</h3>
+          <p>Uygulamanın ne yaptığını bir-iki cümleyle anlatan kısa bir açıklama. Hangi problemi çözüyor, öne çıkan özelliği ne?</p>
+          <div class="p-tags"><span>Kotlin</span><span>Compose</span><span>Room</span><span>Hilt</span></div>
+          <div class="p-links">
+            <a href="#" target="_blank" rel="noopener">Google Play</a>
+            <a href="#" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="p-meta"><span class="yr">2024</span><br>Açık kaynak</div>
+        <div class="p-body">
+          <h3>İkinci Proje</h3>
+          <p>Kısa açıklama. Katkıda bulunduğun ya da sıfırdan yazdığın bir kütüphane, örnek uygulama veya deneysel çalışma olabilir.</p>
+          <div class="p-tags"><span>Kotlin</span><span>Coroutines</span><span>Retrofit</span></div>
+          <div class="p-links">
+            <a href="#" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="project">
+        <div class="p-meta"><span class="yr">2024</span><br>İstemci projesi</div>
+        <div class="p-body">
+          <h3>Üçüncü Proje</h3>
+          <p>Kısa açıklama. Neyi başardığın ve teknik olarak ilginç yanının ne olduğu.</p>
+          <div class="p-tags"><span>Compose</span><span>Material 3</span><span>CI/CD</span></div>
+          <div class="p-links">
+            <a href="#" target="_blank" rel="noopener">Detaylar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ YAZILAR ============ -->
+  <section id="yazilar">
+    <div class="wrap">
+      <p class="kicker">Yazılar</p>
+      <h2 style="margin-bottom:16px">Android üzerine notlar</h2>
+
+      <!-- YENİ YAZI EKLEMEK İÇİN: bir .post bloğunu kopyala, düzenle,
+           href'i yeni yazının dosyasına bağla (örn. yazilar/yazi-basligi.html) -->
+      <a class="post" href="yazilar/ornek-yazi.html">
+        <time class="post-date" datetime="2026-08-12">12 Ağustos 2026</time>
+        <div class="post-main">
+          <h3>Jetpack Compose'da yeniden çizimi (recomposition) anlamak</h3>
+          <p>Compose neyi, ne zaman yeniden çiziyor? Gereksiz recomposition'ları nasıl fark eder ve nasıl azaltırsın?</p>
+          <span class="post-tag">Compose</span>
+        </div>
+      </a>
+
+      <a class="post" href="yazilar/ornek-yazi.html">
+        <time class="post-date" datetime="2026-07-28">28 Temmuz 2026</time>
+        <div class="post-main">
+          <h3>Coroutines ile temiz asenkron kod</h3>
+          <p>structured concurrency mantığı, scope yönetimi ve pratikte sık yapılan hatalar.</p>
+          <span class="post-tag">Kotlin</span>
+        </div>
+      </a>
+
+      <a class="post" href="yazilar/ornek-yazi.html">
+        <time class="post-date" datetime="2026-07-05">5 Temmuz 2026</time>
+        <div class="post-main">
+          <h3>Küçük bir uygulamayı modüllere bölmek</h3>
+          <p>Ne zaman modülerleştirmeye değer, ne zaman erken optimizasyon olur?</p>
+          <span class="post-tag">Mimari</span>
+        </div>
+      </a>
+
+      <p class="writing-foot">Ayrıca <a href="https://medium.com/@volkanunlu2203" target="_blank" rel="noopener" style="color:var(--accent)">Medium</a>'da da düzenli yazıyorum.</p>
+    </div>
+  </section>
+
+  <!-- ============ İLETİŞİM ============ -->
+  <section id="iletisim" class="contact">
+    <div class="wrap">
+      <p class="kicker">İletişim</p>
+      <h2>Birlikte bir şeyler yapalım</h2>
+      <p>Bir proje fikri, iş birliği ya da sadece merhaba demek için — kutu her zaman açık.</p>
+      <a class="btn btn-primary mail-btn" href="mailto:Volkanunlu2203@gmail.com">E-posta gönder</a>
+      <div class="socials">
+        <a href="https://github.com/volkanunlu" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/volkanunluu/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://twitter.com/volkanunludev" target="_blank" rel="noopener">X</a>
+        <a href="https://medium.com/@volkanunlu2203" target="_blank" rel="noopener">Medium</a>
+        <a href="https://stackoverflow.com/users/17439556/volkan-unlu" target="_blank" rel="noopener">Stack Overflow</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<hr class="rule">
+<footer>
+  <div class="foot-inner">
+    <span>© <span id="yil"></span> Volkan Ünlü</span>
+    <span>Kotlin ile İzmir'de yapıldı.</span>
+  </div>
+</footer>
+
+<script>
+  // Yıl
+  document.getElementById('yil').textContent = new Date().getFullYear();
+
+  // Mobil menü
+  const btn = document.getElementById('menuBtn');
+  const links = document.getElementById('navLinks');
+  btn.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', () => {
+      links.classList.remove('open');
+      btn.setAttribute('aria-expanded', false);
+    })
+  );
+</script>
+</body>
+</html>
